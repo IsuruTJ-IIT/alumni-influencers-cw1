@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+
+    <p>Welcome, <strong><%= currentUser.fullName %></strong></p>
+    <p>Email: <%= currentUser.email %></p>
+    <p>Role: <%= currentUser.role %></p>
+
+    <p><a href="/">Home</a></p>
+    <p><a href="/outbox">Open Local Outbox</a></p>
+
+    <form action="/logout" method="POST">
+      <button type="submit">Logout</button>
+    </form>
+  </body>
+</html>

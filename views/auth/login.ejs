@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+
+  <% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+  <form action="/login" method="POST">
+    <div>
+      <label>Email</label><br>
+      <input type="email" name="email" value="<%= email || '' %>" required>
+    </div>
+    <br>
+
+    <div>
+      <label>Password</label><br>
+      <input type="password" name="password" required>
+    </div>
+    <br>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p><a href="/">Home</a></p>
+  <p><a href="/register">Register</a></p>
+  <p><a href="/forgot-password">Forgot Password</a></p>
+</body>
+</html>

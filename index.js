@@ -1,11 +1,13 @@
 "use strict";
 
 require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const morgan = require("morgan");
 const methodOverride = require("method-override");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -40,6 +42,8 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.render("home");
 });
+
+app.use("/", authRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

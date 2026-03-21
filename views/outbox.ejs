@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Local Outbox</title>
+</head>
+<body>
+  <h1>Local Outbox</h1>
+
+  <p>This page simulates email sending for local coursework testing.</p>
+
+  <% if (!emails || emails.length === 0) { %>
+    <p>No outbox emails found.</p>
+  <% } %>
+
+  <% emails.forEach(function(email) { %>
+    <hr>
+    <p><strong>To:</strong> <%= email.to_email %></p>
+    <p><strong>Subject:</strong> <%= email.subject_line %></p>
+    <p><strong>Created:</strong> <%= email.created_at %></p>
+    <pre><%= email.body_text %></pre>
+  <% }); %>
+
+  <p><a href="/">Home</a></p>
+</body>
+</html>
