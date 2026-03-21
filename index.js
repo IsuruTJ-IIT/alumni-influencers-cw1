@@ -8,6 +8,7 @@ const session = require("express-session");
 const morgan = require("morgan");
 const methodOverride = require("method-override");
 const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const app = express();
 
@@ -44,6 +45,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", authRoutes);
+
+app.use("/", profileRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

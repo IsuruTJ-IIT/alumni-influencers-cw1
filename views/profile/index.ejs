@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>My Profile</title>
+</head>
+<body>
+  <h1>My Profile</h1>
+
+  <p><a href="/">Home</a></p>
+  <p><a href="/dashboard">Dashboard</a></p>
+
+  <hr>
+
+  <h2>Profile Completion</h2>
+  <p><strong><%= completion.score %> / <%= completion.total %></strong> completed</p>
+  <p><strong><%= completion.percent %>%</strong></p>
+
+  <% if (success) { %>
+    <p style="color:green;"><%= success %></p>
+  <% } %>
+
+  <% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+  <hr>
+
+  <h2>Basic Profile</h2>
+  <form action="/profile/basic" method="POST">
+    <div>
+      <label>Biography</label><br>
+      <textarea name="biography" rows="5" cols="60"><%= profile.biography || '' %></textarea>
+    </div>
+    <br>
+
+    <div>
+      <label>LinkedIn URL</label><br>
+      <input type="text" name="linkedin_url" value="<%= profile.linkedin_url || '' %>" style="width:400px;">
+    </div>
+    <br>
+
+    <button type="submit">Save Basic Profile</button>
+  </form>
+
+  <hr>
+
+  <h2>Profile Image</h2>
+
+  <% if (profile.profile_image_data) { %>
+    <p>Current Image:</p>
+    <img src="<%= profile.profile_image_data %>" alt="Profile Image" style="max-width:200px; max-height:200px;">
+  <% } %>
+
+  <form id="imageUploadForm" action="/profile/image" method="POST">
+    <input type="hidden" name="profile_image_data" id="profile_image_data">
+    <input type="file" id="profile_image_file" accept="image/*">
+    <button type="submit">Upload Image</button>
+  </form>
+
+  <hr>
+
+  <h2>Add Degree</h2>
+  <form action="/profile/degrees" method="POST">
+    <input type="text" name="degree_name" placeholder="Degree Name" required><br><br>
+    <input type="text" name="institution_name" placeholder="Institution Name" required><br><br>
+    <input type="text" name="degree_url" placeholder="Degree URL"><br><br>
+    <input type="date" name="completion_date"><br><br>
+    <button type="submit">Add Degree</button>
+  </form>
+
+  <h3>Existing Degrees</h3>
+  <% if (degrees.length === 0) { %>
+    <p>No degrees added yet.</p>
+  <% } %>
+
+  <% degrees.forEach(function(item) { %>
+    <hr>
+    <form action="/profile/degrees/<%= item.id %>/update" method="POST">
+      <input type="text" name="degree_name" value="<%= item.degree_name %>" required><br><br>
+      <input type="text" name="institution_name" value="<%= item.institution_name %>" required><br><br>
+      <input type="text" name="degree_url" value="<%= item.degree_url || '' %>"><br><br>
+      <input type="date" name="completion_date" value="<%= item.completion_date ? item.completion_date.toISOString().split('T')[0] : '' %>"><br><br>
+      <button type="submit">Update Degree</button>
+    </form>
+    <form action="/profile/degrees/<%= item.id %>/delete" method="POST" style="margin-top:10px;">
+      <button type="submit">Delete Degree</button>
+    </form>
+  <% }); %>
+
+  <hr>
+
+  <h2>Add Certification</h2>
+  <form action="/profile/certifications" method="POST">
+    <input type="text" name="certification_name" placeholder="Certification Name" required><br><br>
+    <input type="text" name="provider_name" placeholder="Provider Name" required><br><br>
+    <input type="text" name="certification_url" placeholder="Certification URL"><br><br>
+    <input type="date" name="completion_date"><br><br>
+    <button type="submit">Add Certification</button>
+  </form>
+
+  <h3>Existing Certifications</h3>
+  <% if (certifications.length === 0) { %>
+    <p>No certifications added yet.</p>
+  <% } %>
+
+  <% certifications.forEach(function(item) { %>
+    <hr>
+    <form action="/profile/certifications/<%= item.id %>/update" method="POST">
+      <input type="text" name="certification_name" value="<%= item.certification_name %>" required><br><br>
+      <input type="text" name="provider_name" value="<%= item.provider_name %>" required><br><br>
+      <input type="text" name="certification_url" value="<%= item.certification_url || '' %>"><br><br>
+      <input type="date" name="completion_date" value="<%= item.completion_date ? item.completion_date.toISOString().split('T')[0] : '' %>"><br><br>
+      <button type="submit">Update Certification</button>
+    </form>
+    <form action="/profile/certifications/<%= item.id %>/delete" method="POST" style="margin-top:10px;">
+      <button type="submit">Delete Certification</button>
+    </form>
+  <% }); %>
+
+  <hr>
+
+  <h2>Add Licence</h2>
+  <form action="/profile/licences" method="POST">
+    <input type="text" name="licence_name" placeholder="Licence Name" required><br><br>
+    <input type="text" name="awarding_body" placeholder="Awarding Body" required><br><br>
+    <input type="text" name="licence_url" placeholder="Licence URL"><br><br>
+    <input type="date" name="completion_date"><br><br>
+    <button type="submit">Add Licence</button>
+  </form>
+
+  <h3>Existing Licences</h3>
+  <% if (licences.length === 0) { %>
+    <p>No licences added yet.</p>
+  <% } %>
+
+  <% licences.forEach(function(item) { %>
+    <hr>
+    <form action="/profile/licences/<%= item.id %>/update" method="POST">
+      <input type="text" name="licence_name" value="<%= item.licence_name %>" required><br><br>
+      <input type="text" name="awarding_body" value="<%= item.awarding_body %>" required><br><br>
+      <input type="text" name="licence_url" value="<%= item.licence_url || '' %>"><br><br>
+      <input type="date" name="completion_date" value="<%= item.completion_date ? item.completion_date.toISOString().split('T')[0] : '' %>"><br><br>
+      <button type="submit">Update Licence</button>
+    </form>
+    <form action="/profile/licences/<%= item.id %>/delete" method="POST" style="margin-top:10px;">
+      <button type="submit">Delete Licence</button>
+    </form>
+  <% }); %>
+
+  <hr>
+
+  <h2>Add Short Course</h2>
+  <form action="/profile/courses" method="POST">
+    <input type="text" name="course_name" placeholder="Course Name" required><br><br>
+    <input type="text" name="provider_name" placeholder="Provider Name" required><br><br>
+    <input type="text" name="course_url" placeholder="Course URL"><br><br>
+    <input type="date" name="completion_date"><br><br>
+    <button type="submit">Add Short Course</button>
+  </form>
+
+  <h3>Existing Short Courses</h3>
+  <% if (shortCourses.length === 0) { %>
+    <p>No short courses added yet.</p>
+  <% } %>
+
+  <% shortCourses.forEach(function(item) { %>
+    <hr>
+    <form action="/profile/courses/<%= item.id %>/update" method="POST">
+      <input type="text" name="course_name" value="<%= item.course_name %>" required><br><br>
+      <input type="text" name="provider_name" value="<%= item.provider_name %>" required><br><br>
+      <input type="text" name="course_url" value="<%= item.course_url || '' %>"><br><br>
+      <input type="date" name="completion_date" value="<%= item.completion_date ? item.completion_date.toISOString().split('T')[0] : '' %>"><br><br>
+      <button type="submit">Update Short Course</button>
+    </form>
+    <form action="/profile/courses/<%= item.id %>/delete" method="POST" style="margin-top:10px;">
+      <button type="submit">Delete Short Course</button>
+    </form>
+  <% }); %>
+
+  <hr>
+
+  <h2>Add Employment History</h2>
+  <form action="/profile/employment" method="POST">
+    <input type="text" name="job_title" placeholder="Job Title" required><br><br>
+    <input type="text" name="company_name" placeholder="Company Name" required><br><br>
+    <label>Start Date</label><br>
+    <input type="date" name="start_date"><br><br>
+    <label>End Date</label><br>
+    <input type="date" name="end_date"><br><br>
+    <button type="submit">Add Employment</button>
+  </form>
+
+  <h3>Existing Employment History</h3>
+  <% if (employmentHistory.length === 0) { %>
+    <p>No employment history added yet.</p>
+  <% } %>
+
+  <% employmentHistory.forEach(function(item) { %>
+    <hr>
+    <form action="/profile/employment/<%= item.id %>/update" method="POST">
+      <input type="text" name="job_title" value="<%= item.job_title %>" required><br><br>
+      <input type="text" name="company_name" value="<%= item.company_name %>" required><br><br>
+      <label>Start Date</label><br>
+      <input type="date" name="start_date" value="<%= item.start_date ? item.start_date.toISOString().split('T')[0] : '' %>"><br><br>
+      <label>End Date</label><br>
+      <input type="date" name="end_date" value="<%= item.end_date ? item.end_date.toISOString().split('T')[0] : '' %>"><br><br>
+      <button type="submit">Update Employment</button>
+    </form>
+    <form action="/profile/employment/<%= item.id %>/delete" method="POST" style="margin-top:10px;">
+      <button type="submit">Delete Employment</button>
+    </form>
+  <% }); %>
+
+  <script>
+    const imageForm = document.getElementById('imageUploadForm');
+    const imageFileInput = document.getElementById('profile_image_file');
+    const imageDataInput = document.getElementById('profile_image_data');
+
+    imageForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const file = imageFileInput.files[0];
+
+      if (!file) {
+        alert('Please choose an image first.');
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        imageDataInput.value = reader.result;
+        imageForm.submit();
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
