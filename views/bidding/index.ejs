@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Bidding</title>
+</head>
+<body>
+  <h1>Bidding Dashboard</h1>
+
+  <p><a href="/">Home</a></p>
+  <p><a href="/dashboard">Dashboard</a></p>
+  <p><a href="/profile">My Profile</a></p>
+
+  <% if (success) { %>
+    <p style="color:green;"><%= success %></p>
+  <% } %>
+
+  <% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+  <hr>
+
+  <h2>Slot Information</h2>
+  <p><strong>Today:</strong> <%= todayDate %></p>
+  <p><strong>Tomorrow Slot:</strong> <%= tomorrowDate %></p>
+  <p><strong>Bidding Open Right Now:</strong> <%= biddingOpen ? 'Yes' : 'No (cutoff is 6 PM)' %></p>
+
+  <hr>
+
+  <h2>Today Featured Alumnus</h2>
+  <% if (todayFeatured && todayFeatured.full_name && todayFeatured.activated_at) { %>
+    <p><strong><%= todayFeatured.full_name %></strong></p>
+    <p>Activated at: <%= todayFeatured.activated_at %></p>
+  <% } else { %>
+    <p>No featured alumnus activated for today yet.</p>
+  <% } %>
+
+  <hr>
+
+  <h2>Tomorrow Selected Winner</h2>
+  <% if (tomorrowSelected && tomorrowSelected.full_name) { %>
+    <p><strong><%= tomorrowSelected.full_name %></strong></p>
+    <p>Selected at: <%= tomorrowSelected.selected_at %></p>
+  <% } else { %>
+    <p>No winner selected for tomorrow yet.</p>
+  <% } %>
+
+  <hr>
+
+  <h2>Monthly Appearance Status</h2>
+  <p><strong>Wins This Month:</strong> <%= monthlyStatus.wins %></p>
+  <p><strong>Allowed This Month:</strong> <%= monthlyStatus.allowedWins %></p>
+  <p><strong>Remaining:</strong> <%= monthlyStatus.remaining %></p>
+  <p><strong>Event Bonus Active:</strong> <%= monthlyStatus.hasBonus ? 'Yes' : 'No' %></p>
+
+  <% if (!monthlyStatus.hasBonus) { %>
+    <form action="/bidding/event-bonus" method="POST">
+      <button type="submit">Add Event Bonus For This Month (Local Demo Helper)</button>
+    </form>
+  <% } %>
+
+  <hr>
+
+  <h2>Tomorrow Bid</h2>
+
+  <% if (currentBid) { %>
+    <p><strong>Your Current Bid Amount:</strong> <%= currentBid.bid_amount %></p>
+    <p><strong>Your Blind Status:</strong> <%= blindStatus %></p>
+
+    <% if (biddingOpen) { %>
+      <h3>Increase Bid</h3>
+      <form action="/bidding/<%= currentBid.id %>/increase" method="POST">
+        <input type="number" name="new_bid_amount" step="0.01" min="0.01" required>
+        <button type="submit">Increase Bid</button>
+      </form>
+
+      <h3>Cancel Bid</h3>
+      <form action="/bidding/<%= currentBid.id %>/cancel" method="POST">
+        <button type="submit">Cancel Bid</button>
+      </form>
+    <% } else { %>
+      <p>Bidding is closed. You can no longer change today’s bid.</p>
+    <% } %>
+
+  <% } else { %>
+    <% if (biddingOpen && monthlyStatus.remaining > 0) { %>
+      <form action="/bidding" method="POST">
+        <label>Bid Amount</label><br>
+        <input type="number" name="bid_amount" step="0.01" min="0.01" required><br><br>
+        <button type="submit">Place Bid For Tomorrow</button>
+      </form>
+    <% } else if (!biddingOpen) { %>
+      <p>Bidding is closed for today. Cutoff is 6 PM.</p>
+    <% } else { %>
+      <p>You have reached your monthly appearance limit.</p>
+    <% } %>
+  <% } %>
+
+  <hr>
+
+  <h2>Bid History</h2>
+  <% if (bidHistory.length === 0) { %>
+    <p>No bids yet.</p>
+  <% } %>
+
+  <% bidHistory.forEach(function(item) { %>
+    <hr>
+    <p><strong>Slot Date:</strong> <%= item.slot_date_text %></p>
+    <p><strong>Amount:</strong> <%= item.bid_amount %></p>
+    <p><strong>Status:</strong> <%= item.status %></p>
+    <p><strong>Created:</strong> <%= item.created_at_text %></p>
+    <p><strong>Updated:</strong> <%= item.updated_at_text %></p>
+  <% }); %>
+
+  <hr>
+
+  <h2>Local Demo Helpers</h2>
+  <p>These are only for testing without waiting until 6 PM or midnight.</p>
+
+  <form action="/bidding/demo-select-winner" method="POST">
+    <button type="submit">Select Tomorrow Winner Now</button>
+  </form>
+
+  <br>
+
+  <form action="/bidding/demo-activate-today" method="POST">
+    <button type="submit">Activate Today Featured Alumnus Now</button>
+  </form>
+</body>
+</html>
