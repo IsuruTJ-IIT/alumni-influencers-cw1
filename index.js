@@ -10,6 +10,10 @@ const methodOverride = require("method-override");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const biddingRoutes = require("./routes/biddingRoutes");
+const winnerSelectionRoutes = require("./routes/winnerSelectionRoutes");
+const {
+  startWinnerSelectionScheduler,
+} = require("./services/winnerSelectionService");
 const { startBiddingScheduler } = require("./services/biddingService");
 
 const app = express();
@@ -49,8 +53,9 @@ app.get("/", (req, res) => {
 app.use("/", authRoutes);
 app.use("/", profileRoutes);
 app.use("/", biddingRoutes);
+app.use("/", winnerSelectionRoutes);
 
-startBiddingScheduler();
+startWinnerSelectionScheduler();
 
 app.use((err, req, res, next) => {
   console.error(err);

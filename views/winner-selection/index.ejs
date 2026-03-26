@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Winner Selection</title>
+</head>
+<body>
+  <h1>Winner Selection Dashboard</h1>
+
+  <p><a href="/">Home</a></p>
+  <p><a href="/dashboard">Dashboard</a></p>
+  <p><a href="/bidding">Bidding Dashboard</a></p>
+
+  <% if (success) { %>
+    <p style="color:green;"><%= success %></p>
+  <% } %>
+
+  <% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+  <hr>
+
+  <h2>Current Time Logic</h2>
+  <p><strong>Today Slot:</strong> <%= todaySlot %></p>
+  <p><strong>Tomorrow Slot:</strong> <%= tomorrowSlot %></p>
+  <p><strong>After 6 PM Right Now:</strong> <%= afterSixPmNow ? 'Yes' : 'No' %></p>
+
+  <hr>
+
+  <h2>Job Run Status</h2>
+  <p><strong>Select Winner Ran Today:</strong> <%= todaySelectionRan ? 'Yes' : 'No' %></p>
+  <p><strong>Activate Featured Ran Today:</strong> <%= todayActivationRan ? 'Yes' : 'No' %></p>
+
+  <hr>
+
+  <h2>Current Leading Eligible Bid For Tomorrow</h2>
+  <% if (leadingBid) { %>
+    <p><strong>Bid ID:</strong> <%= leadingBid.id %></p>
+    <p><strong>User ID:</strong> <%= leadingBid.user_id %></p>
+    <p><strong>Bid Amount:</strong> <%= leadingBid.bid_amount %></p>
+    <p><strong>Status:</strong> <%= leadingBid.status %></p>
+  <% } else { %>
+    <p>No eligible leading bid for tomorrow yet.</p>
+  <% } %>
+
+  <hr>
+
+  <h2>Today Featured Slot</h2>
+  <% if (todayFeatured) { %>
+    <p><strong>Featured User ID:</strong> <%= todayFeatured.featured_user_id || '' %></p>
+    <p><strong>Full Name:</strong> <%= todayFeatured.full_name || '' %></p>
+    <p><strong>Selected At:</strong> <%= todayFeatured.selected_at || '' %></p>
+    <p><strong>Activated At:</strong> <%= todayFeatured.activated_at || '' %></p>
+  <% } else { %>
+    <p>No featured slot row exists for today yet.</p>
+  <% } %>
+
+  <hr>
+
+  <h2>Tomorrow Featured Slot</h2>
+  <% if (tomorrowFeatured) { %>
+    <p><strong>Featured User ID:</strong> <%= tomorrowFeatured.featured_user_id || '' %></p>
+    <p><strong>Full Name:</strong> <%= tomorrowFeatured.full_name || '' %></p>
+    <p><strong>Selected At:</strong> <%= tomorrowFeatured.selected_at || '' %></p>
+    <p><strong>Activated At:</strong> <%= tomorrowFeatured.activated_at || '' %></p>
+  <% } else { %>
+    <p>No featured slot row exists for tomorrow yet.</p>
+  <% } %>
+
+  <hr>
+
+  <h2>Local Demo Buttons</h2>
+  <p>Use these buttons to test the logic without waiting until 6 PM or midnight.</p>
+
+  <form action="/winner-selection/demo-select" method="POST">
+    <button type="submit">Select Tomorrow Winner Now</button>
+  </form>
+
+  <br>
+
+  <form action="/winner-selection/demo-activate" method="POST">
+    <button type="submit">Activate Today Featured Now</button>
+  </form>
+
+  <br>
+
+  <form action="/winner-selection/run-cycle" method="POST">
+    <button type="submit">Run Full Cycle Now</button>
+  </form>
+</body>
+</html>
