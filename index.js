@@ -15,6 +15,8 @@ const {
   startWinnerSelectionScheduler,
 } = require("./services/winnerSelectionService");
 const { startBiddingScheduler } = require("./services/biddingService");
+const developerTokenRoutes = require("./routes/developerTokenRoutes");
+const publicApiRoutes = require("./routes/publicApiRoutes");
 
 const app = express();
 
@@ -54,6 +56,8 @@ app.use("/", authRoutes);
 app.use("/", profileRoutes);
 app.use("/", biddingRoutes);
 app.use("/", winnerSelectionRoutes);
+app.use("/", developerTokenRoutes);
+app.use("/", publicApiRoutes);
 
 startWinnerSelectionScheduler();
 

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Developer Tokens</title>
+</head>
+<body>
+  <h1>Developer Tokens</h1>
+
+  <p><a href="/">Home</a></p>
+  <p><a href="/dashboard">Dashboard</a></p>
+  <p><a href="/winner-selection">Winner Selection Dashboard</a></p>
+
+  <% if (success) { %>
+    <p style="color:green;"><%= success %></p>
+  <% } %>
+
+  <% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+  <% if (newTokenPlaintext) { %>
+    <hr>
+    <h2>New Token (copy now)</h2>
+    <p><strong><%= newTokenPlaintext %></strong></p>
+    <p>This plaintext token will not be shown again.</p>
+  <% } %>
+
+  <hr>
+
+  <h2>Create New Token</h2>
+  <form action="/developer/tokens" method="POST">
+    <div>
+      <label>Token Name</label><br>
+      <input type="text" name="token_name" placeholder="AR Client Token" required>
+    </div>
+    <br>
+
+    <div>
+      <label>Expiry In Days (optional)</label><br>
+      <input type="number" name="expires_in_days" min="1" placeholder="30">
+    </div>
+    <br>
+
+    <button type="submit">Create Token</button>
+  </form>
+
+  <hr>
+
+  <h2>How To Use The Token</h2>
+  <p>Use this exact HTTP header in Postman:</p>
+  <pre>Authorization: Bearer YOUR_TOKEN_HERE</pre>
+
+  <hr>
+
+  <h2>My Tokens</h2>
+  <% if (!tokens || tokens.length === 0) { %>
+    <p>No tokens created yet.</p>
+  <% } %>
+
+  <% tokens.forEach(function(token) { %>
+    <hr>
+    <p><strong>Token ID:</strong> <%= token.id %></p>
+    <p><strong>Name:</strong> <%= token.token_name %></p>
+    <p><strong>Scope:</strong> <%= token.scope_name %></p>
+    <p><strong>Revoked:</strong> <%= token.is_revoked ? 'Yes' : 'No' %></p>
+    <p><strong>Created:</strong> <%= token.created_at %></p>
+    <p><strong>Last Used:</strong> <%= token.last_used_at || '' %></p>
+    <p><strong>Expiry:</strong> <%= token.expires_at || 'No expiry set' %></p>
+    <p><strong>Usage Count:</strong> <%= token.usage_count %></p>
+
+    <% if (!token.is_revoked) { %>
+      <form action="/developer/tokens/<%= token.id %>/revoke" method="POST">
+        <button type="submit">Revoke Token</button>
+      </form>
+    <% } %>
+  <% }); %>
+
+  <hr>
+
+  <h2>Recent Usage Logs</h2>
+  <% if (!usageLogs || usageLogs.length === 0) { %>
+    <p>No usage logs yet.</p>
+  <% } %>
+
+  <% usageLogs.forEach(function(log) { %>
+    <hr>
+    <p><strong>Token Name:</strong> <%= log.token_name %></p>
+    <p><strong>Endpoint:</strong> <%= log.endpoint %></p>
+    <p><strong>Method:</strong> <%= log.http_method %></p>
+    <p><strong>IP Address:</strong> <%= log.ip_address %></p>
+    <p><strong>Used At:</strong> <%= log.used_at %></p>
+  <% }); %>
+</body>
+</html>
