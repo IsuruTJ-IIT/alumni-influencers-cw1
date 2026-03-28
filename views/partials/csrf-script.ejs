@@ -1,0 +1,20 @@
+<script>
+  (function () {
+    var forms = document.querySelectorAll(
+      'form[method="POST"], form[method="post"]',
+    );
+
+    forms.forEach(function (form) {
+      if (form.querySelector('input[name="_csrf"]')) {
+        return;
+      }
+
+      var input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "_csrf";
+      input.value = "<%= csrfToken %>";
+
+      form.appendChild(input);
+    });
+  })();
+</script>
