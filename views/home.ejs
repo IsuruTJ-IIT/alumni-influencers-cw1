@@ -7,11 +7,13 @@
 <body>
   <h1>Alumni Influencers CW1</h1>
 
-  <p><a href="/register">Register</a></p>
-  <p><a href="/login">Login</a></p>
-  <p><a href="/forgot-password">Forgot Password</a></p>
-  <p><a href="/api-docs">Swagger / OpenAPI Docs</a></p>
-  <p><a href="/outbox">Open Local Outbox</a></p>
+  <% if (!currentUser) { %>
+    <p><a href="/register">Register</a></p>
+    <p><a href="/login">Login</a></p>
+    <p><a href="/forgot-password">Forgot Password</a></p>
+    <p><a href="/api-docs">Swagger / OpenAPI Docs</a></p>
+    <p><a href="/outbox">Open Local Outbox</a></p>
+  <% } %>
 
   <% if (currentUser) { %>
     <hr>
