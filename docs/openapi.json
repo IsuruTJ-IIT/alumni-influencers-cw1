@@ -1,0 +1,346 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Alumni Influencers API",
+    "version": "1.0.0",
+    "description": "Client-agnostic API for retrieving the currently active featured alumnus."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "biography": {
+            "type": "string",
+            "example": "I am an alumna working in software engineering."
+          },
+          "linkedin_url": {
+            "type": "string",
+            "example": "https://www.linkedin.com/in/test-user"
+          },
+          "profile_image_data": {
+            "type": "string",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          }
+        }
+      },
+      "Degree": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "degree_name": {
+            "type": "string",
+            "example": "BSc Computer Science"
+          },
+          "institution_name": {
+            "type": "string",
+            "example": "University of Eastminster"
+          },
+          "degree_url": {
+            "type": "string",
+            "example": "https://example.com/degree"
+          },
+          "completion_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-06-01"
+          }
+        }
+      },
+      "Certification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "certification_name": {
+            "type": "string",
+            "example": "AWS Cloud Practitioner"
+          },
+          "provider_name": {
+            "type": "string",
+            "example": "Amazon"
+          },
+          "certification_url": {
+            "type": "string",
+            "example": "https://example.com/aws"
+          },
+          "completion_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-01-15"
+          }
+        }
+      },
+      "Licence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "licence_name": {
+            "type": "string",
+            "example": "Professional Membership"
+          },
+          "awarding_body": {
+            "type": "string",
+            "example": "Example Body"
+          },
+          "licence_url": {
+            "type": "string",
+            "example": "https://example.com/licence"
+          },
+          "completion_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-02-01"
+          }
+        }
+      },
+      "ShortCourse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "course_name": {
+            "type": "string",
+            "example": "Data Analytics Short Course"
+          },
+          "provider_name": {
+            "type": "string",
+            "example": "Coursera"
+          },
+          "course_url": {
+            "type": "string",
+            "example": "https://example.com/course"
+          },
+          "completion_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-03-10"
+          }
+        }
+      },
+      "EmploymentHistory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "job_title": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "company_name": {
+            "type": "string",
+            "example": "ABC Tech"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-01-01"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-01-01"
+          }
+        }
+      },
+      "FeaturedAlumnusResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "full_name": {
+                "type": "string",
+                "example": "Test User"
+              },
+              "email": {
+                "type": "string",
+                "example": "test@eastminster.ac.uk"
+              },
+              "profile": {
+                "$ref": "#/components/schemas/Profile"
+              },
+              "degrees": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Degree"
+                }
+              },
+              "certifications": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Certification"
+                }
+              },
+              "licences": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Licence"
+                }
+              },
+              "short_courses": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShortCourse"
+                }
+              },
+              "employment_history": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EmploymentHistory"
+                }
+              },
+              "slot_date": {
+                "type": "string",
+                "format": "date",
+                "example": "2026-04-05"
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid, revoked, or expired token."
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/featured-alumnus": {
+      "get": {
+        "summary": "Get today's featured alumnus",
+        "description": "Returns the currently active featured alumnus for today. This endpoint is protected by a bearer token.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Featured alumnus returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeaturedAlumnusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, revoked, or expired bearer token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingToken": {
+                    "value": {
+                      "success": false,
+                      "message": "Missing bearer token."
+                    }
+                  },
+                  "invalidToken": {
+                    "value": {
+                      "success": false,
+                      "message": "Invalid, revoked, or expired token."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No featured alumnus is active for today",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "No featured alumnus is active for today."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Failed to fetch featured alumnus."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

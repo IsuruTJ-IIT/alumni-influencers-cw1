@@ -10,6 +10,7 @@
   <p><a href="/register">Register</a></p>
   <p><a href="/login">Login</a></p>
   <p><a href="/forgot-password">Forgot Password</a></p>
+  <p><a href="/api-docs">Swagger / OpenAPI Docs</a></p>
   <p><a href="/outbox">Open Local Outbox</a></p>
 
   <% if (currentUser) { %>
@@ -20,11 +21,13 @@
     <p><a href="/bidding">Bidding Dashboard</a></p>
     <p><a href="/winner-selection">Winner Selection Dashboard</a></p>
     <p><a href="/developer/tokens">Developer Tokens</a></p>
+    <p><a href="/api-docs">Swagger / OpenAPI Docs</a></p>
 
     <form action="/logout" method="POST">
       <button type="submit">Logout</button>
     </form>
   <% } %>
+
   <%- include('partials/csrf-script') %>
 </body>
 </html>

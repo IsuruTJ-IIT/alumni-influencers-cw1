@@ -19,6 +19,7 @@ const biddingRoutes = require("./routes/biddingRoutes");
 const winnerSelectionRoutes = require("./routes/winnerSelectionRoutes");
 const developerTokenRoutes = require("./routes/developerTokenRoutes");
 const publicApiRoutes = require("./routes/publicApiRoutes");
+const apiDocsRoutes = require("./routes/apiDocsRoutes");
 
 const {
   startWinnerSelectionScheduler,
@@ -43,6 +44,7 @@ app.use(morgan("dev"));
 
 // Static files
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/docs", express.static(path.join(__dirname, "docs")));
 
 // Body parsers
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -114,6 +116,7 @@ app.use("/", biddingRoutes);
 app.use("/", winnerSelectionRoutes);
 app.use("/", developerTokenRoutes);
 app.use("/", publicApiRoutes);
+app.use("/", apiDocsRoutes);
 
 // Start background scheduler
 startWinnerSelectionScheduler();
