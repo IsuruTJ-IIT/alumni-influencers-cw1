@@ -27,6 +27,7 @@ async function createToken(req, res) {
   try {
     const userId = req.session.user.id;
     const tokenName = String(req.body.token_name || "").trim();
+    const clientType = String(req.body.client_type || "mobile_ar_app").trim();
     const expiresInDaysRaw = String(req.body.expires_in_days || "").trim();
 
     if (!tokenName) {
@@ -54,11 +55,22 @@ async function createToken(req, res) {
     const plainToken = generatePlainToken();
     const tokenHash = hashToken(plainToken);
 
+    let scopeName = "read:alumni_of_day";
+
+    if (clientType === "analytics_dashboard") {
+      scopeName = "read:alumni read:analytics";
+    }
+
+    if (clientType === "mobile_ar_app") {
+      scopeName = "read:alumni_of_day";
+    }
+
     await apiTokenDao.createApiToken({
       developerUserId: userId,
       tokenName,
       tokenHash,
-      scopeName: "featured:read",
+      scopeName,
+      clientType,
       expiresAt,
     });
 

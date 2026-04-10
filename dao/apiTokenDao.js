@@ -6,24 +6,26 @@ async function createApiToken({
   developerUserId,
   tokenName,
   tokenHash,
-  scopeName = "featured:read",
+  scopeName = "read:alumni_of_day",
+  clientType = "mobile_ar_app",
   expiresAt = null,
 }) {
   const [result] = await db.execute(
-    `INSERT INTO api_tokens (developer_user_id, token_name, token_hash, scope_name, expires_at)
-     VALUES (?, ?, ?, ?, ?)`,
-    [developerUserId, tokenName, tokenHash, scopeName, expiresAt],
+    `INSERT INTO api_tokens
+       (developer_user_id, token_name, token_hash, scope_name, client_type, expires_at)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [developerUserId, tokenName, tokenHash, scopeName, clientType, expiresAt]
   );
 
   return result.insertId;
 }
-
 async function getTokensWithUsageSummaryByUser(userId) {
   const [rows] = await db.execute(
     `SELECT
        t.id,
        t.token_name,
        t.scope_name,
+       t.client_type,
        t.is_revoked,
        t.expires_at,
        t.last_used_at,
@@ -36,6 +38,7 @@ async function getTokensWithUsageSummaryByUser(userId) {
        t.id,
        t.token_name,
        t.scope_name,
+       t.client_type,
        t.is_revoked,
        t.expires_at,
        t.last_used_at,
