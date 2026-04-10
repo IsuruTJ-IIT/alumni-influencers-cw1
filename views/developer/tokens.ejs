@@ -37,6 +37,15 @@
     <br>
 
     <div>
+      <label>Client Application Type</label><br>
+      <select name="client_type" required>
+        <option value="mobile_ar_app">Mobile AR App - read:alumni_of_day</option>
+        <option value="analytics_dashboard">University Analytics Dashboard - read:alumni read:analytics</option>
+      </select>
+    </div>
+    <br>
+
+    <div>
       <label>Expiry In Days (optional)</label><br>
       <input type="number" name="expires_in_days" min="1" placeholder="30">
     </div>
@@ -63,6 +72,7 @@
     <p><strong>Token ID:</strong> <%= token.id %></p>
     <p><strong>Name:</strong> <%= token.token_name %></p>
     <p><strong>Scope:</strong> <%= token.scope_name %></p>
+    <p><strong>Client Type:</strong> <%= token.client_type %></p>
     <p><strong>Revoked:</strong> <%= token.is_revoked ? 'Yes' : 'No' %></p>
     <p><strong>Created:</strong> <%= token.created_at %></p>
     <p><strong>Last Used:</strong> <%= token.last_used_at || '' %></p>
