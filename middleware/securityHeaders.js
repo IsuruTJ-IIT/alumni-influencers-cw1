@@ -10,8 +10,8 @@ function securityHeaders(req, res, next) {
   res.setHeader(
     "Content-Security-Policy",
     "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' https://unpkg.com; " +
-      "style-src 'self' 'unsafe-inline' https://unpkg.com; " +
+      "script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " +
+      "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " +
       "img-src 'self' data:; " +
       "connect-src 'self'; " +
       "form-action 'self'; " +
