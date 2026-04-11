@@ -20,6 +20,8 @@ const winnerSelectionRoutes = require("./routes/winnerSelectionRoutes");
 const developerTokenRoutes = require("./routes/developerTokenRoutes");
 const publicApiRoutes = require("./routes/publicApiRoutes");
 const apiDocsRoutes = require("./routes/apiDocsRoutes");
+const universityRoutes = require("./routes/universityRoutes");
+const analyticsApiRoutes = require("./routes/analyticsApiRoutes");
 
 const {
   startWinnerSelectionScheduler,
@@ -117,6 +119,8 @@ app.use("/", winnerSelectionRoutes);
 app.use("/", developerTokenRoutes);
 app.use("/", publicApiRoutes);
 app.use("/", apiDocsRoutes);
+app.use("/", universityRoutes);
+app.use("/", analyticsApiRoutes);
 
 // Start background scheduler
 startWinnerSelectionScheduler();
