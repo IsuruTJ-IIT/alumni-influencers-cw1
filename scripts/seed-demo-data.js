@@ -252,7 +252,7 @@ async function seed() {
     }
   }
 
-  console.log("CW2 demo data inserted.");
+  console.log("demo data inserted.");
   console.log("Login accounts:");
   console.log("developer@eastminster.ac.uk / Password@123");
   console.log("analyst@eastminster.ac.uk / Password@123");
