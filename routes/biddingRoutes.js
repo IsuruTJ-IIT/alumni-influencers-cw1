@@ -1,36 +1,22 @@
 "use strict";
 
 const express = require("express");
-const requireLogin = require("../middleware/requireLogin");
+const requireRole = require("../middleware/requireRole");
 const biddingController = require("../controllers/biddingController");
 
 const router = express.Router();
 
-router.get("/bidding", requireLogin, biddingController.showBiddingPage);
+/*
+  Only alumni can place, increase, cancel, and view their own bids.
+*/
+router.use("/bidding", requireRole("alumnus"));
 
-router.post("/bidding", requireLogin, biddingController.placeBid);
-router.post(
-  "/bidding/:id/increase",
-  requireLogin,
-  biddingController.increaseBid,
-);
-router.post("/bidding/:id/cancel", requireLogin, biddingController.cancelBid);
+router.get("/bidding", biddingController.showBiddingPage);
 
-router.post(
-  "/bidding/event-bonus",
-  requireLogin,
-  biddingController.addEventBonus,
-);
+router.post("/bidding", biddingController.placeBid);
 
-router.post(
-  "/bidding/demo-select-winner",
-  requireLogin,
-  biddingController.demoSelectTomorrowWinner,
-);
-router.post(
-  "/bidding/demo-activate-today",
-  requireLogin,
-  biddingController.demoActivateToday,
-);
+router.post("/bidding/:id/increase", biddingController.increaseBid);
+
+router.post("/bidding/:id/cancel", biddingController.cancelBid);
 
 module.exports = router;

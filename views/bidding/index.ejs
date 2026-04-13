@@ -55,9 +55,10 @@
   <p><strong>Event Bonus Active:</strong> <%= monthlyStatus.hasBonus ? 'Yes' : 'No' %></p>
 
   <% if (!monthlyStatus.hasBonus) { %>
-    <form action="/bidding/event-bonus" method="POST">
-      <button type="submit">Add Event Bonus For This Month (Local Demo Helper)</button>
-    </form>
+    <p>
+      No event bonus has been recorded for you this month.
+      Event bonuses are recorded by the developer during local testing.
+    </p>
   <% } %>
 
   <hr>
@@ -115,18 +116,10 @@
 
   <hr>
 
-  <h2>Local Demo Helpers</h2>
-  <p>These are only for testing without waiting until 6 PM or midnight.</p>
-
-  <form action="/bidding/demo-select-winner" method="POST">
-    <button type="submit">Select Tomorrow Winner Now</button>
-  </form>
-
-  <br>
-
-  <form action="/bidding/demo-activate-today" method="POST">
-    <button type="submit">Activate Today Featured Alumnus Now</button>
-  </form>
+  <p>
+    Winner selection is handled automatically by the scheduler.
+    Local demo controls are only available to the developer account.
+  </p>
   <%- include('../partials/csrf-script') %>
 </body>
 </html>

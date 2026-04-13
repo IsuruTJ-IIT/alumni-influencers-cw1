@@ -4,6 +4,7 @@ const express = require("express");
 const authController = require("../controllers/authController");
 const requireLogin = require("../middleware/requireLogin");
 const requireGuest = require("../middleware/requireGuest");
+const requireRole = require("../middleware/requireRole");
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.get(
   requireGuest,
   authController.showForgotPasswordPage,
 );
+
 router.post("/forgot-password", requireGuest, authController.forgotPassword);
 
 router.get(
@@ -29,10 +31,16 @@ router.get(
   requireGuest,
   authController.showResetPasswordPage,
 );
+
 router.post("/reset-password", requireGuest, authController.resetPassword);
 
 router.get("/dashboard", requireLogin, authController.showDashboard);
 
-router.get("/outbox", authController.showOutbox);
+/*
+  Local outbox contains verification and password-reset links.
+  It must not be public because anyone could steal reset links.
+  For coursework demo, only the developer account can inspect it.
+*/
+router.get("/outbox", requireRole("developer"), authController.showOutbox);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 {
-  "name": "alumni-influencers-cw",
+  "name": "alumni-influencers",
   "version": "1.0.0",
-  "description": "6COSC022W Coursework 1",
+  "description": "Alumni Influencers System",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {

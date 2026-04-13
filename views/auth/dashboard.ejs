@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Dashboard</title>
-  </head>
-  <body>
-    <h1>Dashboard</h1>
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>Dashboard</h1>
 
-    <p>Welcome, <strong><%= currentUser.fullName %></strong></p>
-    <p>Email: <%= currentUser.email %></p>
-    <p>Role: <%= currentUser.role %></p>
+  <p>Welcome, <strong><%= currentUser.fullName %></strong></p>
+  <p>Email: <%= currentUser.email %></p>
+  <p>Role: <%= currentUser.role %></p>
 
-    <p><a href="/">Home</a></p>
+  <p><a href="/">Home</a></p>
+
+  <% if (currentUser.role === 'alumnus') { %>
+    <h2>Alumnus Area</h2>
+    <p><a href="/profile">My Profile</a></p>
+    <p><a href="/bidding">Bidding Dashboard</a></p>
+  <% } %>
+
+  <% if (currentUser.role === 'university') { %>
+    <h2>University Analytics Area</h2>
+    <p><a href="/university/dashboard">University Analytics Dashboard</a></p>
+    <p><a href="/university/alumni">View Alumni Analytics</a></p>
+  <% } %>
+
+  <% if (currentUser.role === 'developer') { %>
+    <h2>Developer Area</h2>
+    <p><a href="/developer/tokens">Developer Tokens</a></p>
     <p><a href="/winner-selection">Winner Selection Dashboard</a></p>
     <p><a href="/api-docs">Swagger / OpenAPI Docs</a></p>
     <p><a href="/outbox">Open Local Outbox</a></p>
+  <% } %>
 
-    <% if (currentUser.role === 'university') { %>
-      <p><a href="/university/dashboard">University Analytics Dashboard</a></p>
-      <p><a href="/university/alumni">View Alumni Analytics</a></p>
-    <% } %>
-
-    <% if (currentUser.role === 'developer') { %>
-      <p><a href="/developer/tokens">Developer Tokens</a></p>
-    <% } %>
-
-    <% if (currentUser.role === 'alumnus') { %>
-      <p><a href="/profile">My Profile</a></p>
-      <p><a href="/bidding">Bidding Dashboard</a></p>
-    <% } %> 
-
-    <form action="/logout" method="POST">
-      <button type="submit">Logout</button>
-    </form>
-
-    <%- include('../partials/csrf-script') %>
-  </body>
+  <form action="/logout" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit">Logout</button>
+  </form>
+</body>
 </html>

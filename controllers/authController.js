@@ -96,7 +96,7 @@ async function register(req, res) {
     return renderMessage(
       res,
       "Registration successful",
-      "Your account was created. Open /outbox and click the verification link.",
+      "Your account was created. For local testing, the developer account can open /outbox and use the verification link.",
     );
   } catch (error) {
     console.error(error);
@@ -237,7 +237,7 @@ async function forgotPassword(req, res) {
     return renderMessage(
       res,
       "Password reset",
-      "If that email exists, a password reset link was generated. Open /outbox to inspect it.",
+      "If that email exists, a password reset link was generated. For local testing, the developer account can open /outbox to inspect it.",
     );
   } catch (error) {
     console.error(error);

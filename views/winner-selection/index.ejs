@@ -70,6 +70,25 @@
 
   <hr>
 
+
+  <h2>Grant Event Bonus</h2>
+  <p>
+    Use this only for local testing. This simulates that an alumnus attended
+    a university alumni event and is allowed a 4th monthly appearance.
+  </p>
+
+  <form action="/winner-selection/event-bonus" method="POST">
+    <label>Alumnus User ID</label><br>
+    <input type="number" name="alumnus_user_id" min="1" required>
+    <br><br>
+
+    <label>Event Month</label><br>
+    <input type="month" name="event_month" required>
+    <br><br>
+
+    <button type="submit">Grant Event Bonus</button>
+  </form>
+  <hr>
   <h2>Local Demo Buttons</h2>
   <p>Use these buttons to test the logic without waiting until 6 PM or midnight.</p>
 

@@ -1,90 +1,46 @@
 "use strict";
 
 const express = require("express");
-const requireLogin = require("../middleware/requireLogin");
+const requireRole = require("../middleware/requireRole");
 const profileController = require("../controllers/profileController");
 
 const router = express.Router();
 
-router.get("/profile", requireLogin, profileController.showProfilePage);
+/*
+  Only alumni can manage alumni profiles.
+  Developer and university users must not create/edit alumni profiles.
+*/
+router.use("/profile", requireRole("alumnus"));
 
-router.post(
-  "/profile/basic",
-  requireLogin,
-  profileController.updateBasicProfile,
-);
-router.post(
-  "/profile/image",
-  requireLogin,
-  profileController.updateProfileImage,
-);
+router.get("/profile", profileController.showProfilePage);
 
-router.post("/profile/degrees", requireLogin, profileController.addDegree);
-router.post(
-  "/profile/degrees/:id/update",
-  requireLogin,
-  profileController.updateDegree,
-);
-router.post(
-  "/profile/degrees/:id/delete",
-  requireLogin,
-  profileController.deleteDegree,
-);
+router.post("/profile/basic", profileController.updateBasicProfile);
+router.post("/profile/image", profileController.updateProfileImage);
 
-router.post(
-  "/profile/certifications",
-  requireLogin,
-  profileController.addCertification,
-);
+router.post("/profile/degrees", profileController.addDegree);
+router.post("/profile/degrees/:id/update", profileController.updateDegree);
+router.post("/profile/degrees/:id/delete", profileController.deleteDegree);
+
+router.post("/profile/certifications", profileController.addCertification);
 router.post(
   "/profile/certifications/:id/update",
-  requireLogin,
   profileController.updateCertification,
 );
 router.post(
   "/profile/certifications/:id/delete",
-  requireLogin,
   profileController.deleteCertification,
 );
 
-router.post("/profile/licences", requireLogin, profileController.addLicence);
-router.post(
-  "/profile/licences/:id/update",
-  requireLogin,
-  profileController.updateLicence,
-);
-router.post(
-  "/profile/licences/:id/delete",
-  requireLogin,
-  profileController.deleteLicence,
-);
+router.post("/profile/licences", profileController.addLicence);
+router.post("/profile/licences/:id/update", profileController.updateLicence);
+router.post("/profile/licences/:id/delete", profileController.deleteLicence);
 
-router.post("/profile/courses", requireLogin, profileController.addShortCourse);
-router.post(
-  "/profile/courses/:id/update",
-  requireLogin,
-  profileController.updateShortCourse,
-);
-router.post(
-  "/profile/courses/:id/delete",
-  requireLogin,
-  profileController.deleteShortCourse,
-);
+router.post("/profile/courses", profileController.addShortCourse);
+router.post("/profile/courses/:id/update", profileController.updateShortCourse);
+router.post("/profile/courses/:id/delete", profileController.deleteShortCourse);
 
-router.post(
-  "/profile/employment",
-  requireLogin,
-  profileController.addEmployment,
-);
-router.post(
-  "/profile/employment/:id/update",
-  requireLogin,
-  profileController.updateEmployment,
-);
-router.post(
-  "/profile/employment/:id/delete",
-  requireLogin,
-  profileController.deleteEmployment,
-);
+router.post("/profile/employment", profileController.addEmployment);
+router.post("/profile/employment/:id/update", profileController.updateEmployment);
+router.post("/profile/employment/:id/delete", profileController.deleteEmployment);
 
 module.exports = router;

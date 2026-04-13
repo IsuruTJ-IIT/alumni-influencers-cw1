@@ -6,16 +6,19 @@ const universityController = require("../controllers/universityController");
 
 const router = express.Router();
 
+/*
+  Only university users can view the analytics client pages.
+*/
 router.get(
   "/university/dashboard",
   requireRole("university"),
-  universityController.showDashboard
+  universityController.showDashboard,
 );
 
 router.get(
   "/university/alumni",
   requireRole("university"),
-  universityController.showAlumniPage
+  universityController.showAlumniPage,
 );
 
 module.exports = router;
