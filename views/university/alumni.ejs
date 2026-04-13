@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Alumni</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <aside class="sidebar">
+      <h2>University Analytics</h2>
+      <p>Signed in as:<br><strong><%= currentUser.fullName %></strong></p>
+      <a href="/dashboard">Main Dashboard</a>
+      <a href="/university/dashboard">Charts Dashboard</a>
+      <a href="/university/alumni">View Alumni</a>
+      <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+      </form>
+    </aside>
+
+    <main class="main-content">
+      <h1>View Alumni</h1>
+      <p>This page displays alumni filtered by programme, graduation year, and industry sector.</p>
+
+      <div id="loadingBox" class="loading" style="display:none;">Loading data from API...</div>
+      <div id="errorBox" class="error" style="display:none;"></div>
+
+      <section class="card">
+        <h2>API Token and Filters</h2>
+        <input id="apiTokenInput" type="text" placeholder="Paste analytics dashboard bearer token" style="width:100%;" />
+        <br /><br />
+        <div class="filters">
+          <div><label>Programme</label><br /><select id="programmeFilter"></select></div>
+          <div><label>Graduation Year</label><br /><select id="graduationYearFilter"></select></div>
+          <div><label>Industry Sector</label><br /><select id="industrySectorFilter"></select></div>
+          <div><label>Action</label><br /><button id="loadDashboardButton" class="primary" type="button">Load Alumni</button></div>
+        </div>
+        <br />
+        <button id="exportCsvButton" class="secondary" type="button">Export Alumni CSV</button>
+      </section>
+
+      <section class="card">
+        <h2>Alumni Results</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Programme</th>
+                <th>Graduation Year</th>
+                <th>Industry</th>
+                <th>Job Titles</th>
+                <th>Employers</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody id="alumniTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <%- include('../partials/csrf-script') %>
+  <script src="/js/university-dashboard.js"></script>
+</body>
+</html>

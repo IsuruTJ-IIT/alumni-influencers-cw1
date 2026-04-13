@@ -1,0 +1,189 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6fb;
+  color: #1f2937;
+}
+
+.page-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background: #10233f;
+  color: white;
+  padding: 24px;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.sidebar a,
+.sidebar button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  color: white;
+  background: #1d4ed8;
+  border: 0;
+  border-radius: 8px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sidebar form {
+  margin: 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.filters label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+input,
+select,
+button {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+button.primary {
+  background: #1d4ed8;
+  color: white;
+  border: 0;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #e2e8f0;
+  color: #111827;
+  cursor: pointer;
+}
+
+.chart-card canvas {
+  max-height: 320px;
+}
+
+.loading {
+  padding: 12px;
+  background: #fef3c7;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.error {
+  padding: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.insight-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.insight {
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: white;
+  font-weight: bold;
+}
+
+.critical {
+  background: #b91c1c;
+}
+
+.significant {
+  background: #c2410c;
+}
+
+.emerging {
+  background: #a16207;
+}
+
+.normal {
+  background: #0369a1;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #e2e8f0;
+}
+
+@media (max-width: 950px) {
+  .page-shell {
+    display: block;
+  }
+
+  .sidebar {
+    width: auto;
+  }
+
+  .grid-4,
+  .grid-2,
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}

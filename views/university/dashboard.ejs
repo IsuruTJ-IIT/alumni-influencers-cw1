@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>University Analytics Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <aside class="sidebar">
+      <h2>University Analytics</h2>
+      <p>Signed in as:<br><strong><%= currentUser.fullName %></strong></p>
+      <a href="/dashboard">Main Dashboard</a>
+      <a href="/university/dashboard">Charts Dashboard</a>
+      <a href="/university/alumni">View Alumni</a>
+      <a href="/api-docs">API Docs</a>
+      <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+      </form>
+    </aside>
+
+    <main class="main-content">
+      <h1>University Analytics & Intelligence Dashboard</h1>
+      <p>This dashboard fetches alumni analytics from scoped API endpoints.</p>
+
+      <div id="loadingBox" class="loading" style="display:none;">Loading data from API...</div>
+      <div id="errorBox" class="error" style="display:none;"></div>
+
+      <section class="card">
+        <h2>API Token</h2>
+        <p>Paste a token with <strong>read:alumni</strong> and <strong>read:analytics</strong> permissions.</p>
+        <input id="apiTokenInput" type="text" placeholder="Paste analytics dashboard bearer token" style="width:100%;" />
+      </section>
+
+      <section class="card">
+        <h2>Filters</h2>
+        <div class="filters">
+          <div>
+            <label>Programme</label><br />
+            <select id="programmeFilter"></select>
+          </div>
+          <div>
+            <label>Graduation Year</label><br />
+            <select id="graduationYearFilter"></select>
+          </div>
+          <div>
+            <label>Industry Sector</label><br />
+            <select id="industrySectorFilter"></select>
+          </div>
+          <div>
+            <label>Actions</label><br />
+            <button id="loadDashboardButton" class="primary" type="button">Load / Refresh</button>
+          </div>
+        </div>
+        <br />
+        <button id="savePresetButton" class="secondary" type="button">Save Filter Preset</button>
+        <button id="loadPresetButton" class="secondary" type="button">Load Filter Preset</button>
+        <button id="exportCsvButton" class="secondary" type="button">Export Alumni CSV</button>
+        <button id="downloadChartsButton" class="secondary" type="button">Download Chart Images</button>
+        <button id="printReportButton" class="secondary" type="button">Print / Save PDF Report</button>
+      </section>
+
+      <section class="grid-4">
+        <div class="card"><h3>Total Alumni</h3><div id="totalAlumni" class="stat">0</div></div>
+        <div class="card"><h3>Development Items</h3><div id="totalDevelopment" class="stat">0</div></div>
+        <div class="card"><h3>Avg. Development / Alumni</h3><div id="averageDevelopment" class="stat">0</div></div>
+        <div class="card"><h3>Countries</h3><div id="totalCountries" class="stat">0</div></div>
+      </section>
+
+      <section class="card">
+        <h2>Curriculum Skills Gap Insights</h2>
+        <p>Critical/significant/emerging labels are based on how often alumni independently acquire skills after graduation.</p>
+        <div id="insightsBox" class="insight-list">Load data to see insights.</div>
+      </section>
+
+      <section class="grid-2">
+        <div class="card chart-card"><canvas id="chartProgramme"></canvas></div>
+        <div class="card chart-card"><canvas id="chartGraduation"></canvas></div>
+        <div class="card chart-card"><canvas id="chartIndustry"></canvas></div>
+        <div class="card chart-card"><canvas id="chartJobs"></canvas></div>
+        <div class="card chart-card"><canvas id="chartEmployers"></canvas></div>
+        <div class="card chart-card"><canvas id="chartGeo"></canvas></div>
+        <div class="card chart-card"><canvas id="chartDevelopment"></canvas></div>
+        <div class="card chart-card"><canvas id="chartSkills"></canvas></div>
+      </section>
+
+      <section class="card">
+        <h2>Filtered Alumni Preview</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Programme</th>
+                <th>Graduation Year</th>
+                <th>Industry</th>
+                <th>Job Titles</th>
+                <th>Employers</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody id="alumniTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <%- include('../partials/csrf-script') %>
+  <script src="/js/university-dashboard.js"></script>
+</body>
+</html>
