@@ -1,106 +1,185 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Developer Tokens</title>
-</head>
-<body>
-  <h1>Developer Tokens</h1>
+<%- include('../partials/head', { title: 'Developer Tokens' }) %>
+<%- include('../partials/nav') %>
 
-  <p><a href="/">Home</a></p>
-  <p><a href="/dashboard">Dashboard</a></p>
-  <p><a href="/winner-selection">Winner Selection Dashboard</a></p>
+<div class="py-6">
+  <div class="mb-8">
+    <h1 class="page-title mb-1">Developer API Tokens</h1>
+    <p class="text-slate-600">Manage authentication tokens for third-party client applications.</p>
+  </div>
 
   <% if (success) { %>
-    <p style="color:green;"><%= success %></p>
+    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6" role="alert">
+      <p class="text-sm text-green-700"><%= success %></p>
+    </div>
   <% } %>
 
   <% if (error) { %>
-    <p style="color:red;"><%= error %></p>
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6" role="alert">
+      <p class="text-sm text-red-700"><%= error %></p>
+    </div>
   <% } %>
 
   <% if (newTokenPlaintext) { %>
-    <hr>
-    <h2>New Token (copy now)</h2>
-    <p><strong><%= newTokenPlaintext %></strong></p>
-    <p>This plaintext token will not be shown again.</p>
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-8 shadow-sm">
+      <div class="flex items-start">
+        <div class="flex-shrink-0 pt-1">
+          <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        </div>
+        <div class="ml-4 w-full">
+          <h2 class="text-lg font-bold text-amber-800 mb-2">New Token Created (Copy Now)</h2>
+          <p class="text-sm text-amber-700 mb-3">This plaintext token will <strong class="font-bold">not</strong> be shown again. Please copy it immediately.</p>
+          <div class="bg-white border border-amber-300 p-3 rounded text-sm font-mono break-all text-slate-800 shadow-inner">
+            <%= newTokenPlaintext %>
+          </div>
+        </div>
+      </div>
+    </div>
   <% } %>
 
-  <hr>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    
+    <!-- Create Token Form -->
+    <div class="lg:col-span-1 space-y-6">
+      <div class="card p-6">
+        <h2 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">Create New Token</h2>
+        <form action="/developer/tokens" method="POST" class="space-y-4">
+          <div>
+            <label for="token_name" class="block text-sm font-medium text-slate-700 mb-1">Token Name</label>
+            <input id="token_name" type="text" name="token_name" placeholder="e.g. AR Client Token" required class="input-field">
+          </div>
+          <div>
+            <label for="client_type" class="block text-sm font-medium text-slate-700 mb-1">Client Application Type</label>
+            <select id="client_type" name="client_type" required class="input-field">
+              <option value="mobile_ar_app">Mobile AR App - read:alumni_of_day</option>
+              <option value="analytics_dashboard">Analytics Dashboard - read:alumni read:analytics</option>
+            </select>
+          </div>
+          <div>
+            <label for="expires_in_days" class="block text-sm font-medium text-slate-700 mb-1">Expiry In Days (optional)</label>
+            <input id="expires_in_days" type="number" name="expires_in_days" min="1" placeholder="30" class="input-field">
+          </div>
+          <button type="submit" class="btn-primary w-full mt-2">Generate Token</button>
+        </form>
+      </div>
 
-  <h2>Create New Token</h2>
-  <form action="/developer/tokens" method="POST">
-    <div>
-      <label>Token Name</label><br>
-      <input type="text" name="token_name" placeholder="AR Client Token" required>
+      <div class="card p-6 bg-slate-50 border-slate-200">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">How To Use The Token</h2>
+        <p class="text-xs text-slate-600 mb-3">Include this HTTP header in your API requests (e.g. Postman):</p>
+        <div class="bg-slate-900 text-green-400 p-3 rounded font-mono text-xs overflow-x-auto">
+          Authorization: Bearer YOUR_TOKEN_HERE
+        </div>
+      </div>
     </div>
-    <br>
 
-    <div>
-      <label>Client Application Type</label><br>
-      <select name="client_type" required>
-        <option value="mobile_ar_app">Mobile AR App - read:alumni_of_day</option>
-        <option value="analytics_dashboard">University Analytics Dashboard - read:alumni read:analytics</option>
-      </select>
+    <!-- Token List -->
+    <div class="lg:col-span-2">
+      <div class="card overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 bg-white">
+          <h2 class="text-lg font-bold text-slate-900">Active & Revoked Tokens</h2>
+        </div>
+        
+        <% if (!tokens || tokens.length === 0) { %>
+          <div class="p-8 text-center text-sm text-slate-500 italic bg-slate-50">No tokens created yet.</div>
+        <% } else { %>
+          <div class="divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
+            <% tokens.forEach(function(token) { %>
+              <div class="p-6 hover:bg-slate-50 transition-colors">
+                <div class="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 class="text-base font-bold text-slate-900"><%= token.token_name %></h3>
+                    <p class="text-xs font-mono text-slate-400 mt-1">ID: <%= token.id %></p>
+                  </div>
+                  <% if (token.is_revoked) { %>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">REVOKED</span>
+                  <% } else { %>
+                    <span class="px-2.5 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">ACTIVE</span>
+                  <% } %>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+                  <div>
+                    <span class="block text-xs text-slate-500 mb-0.5">Scope</span>
+                    <span class="font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-xs"><%= token.scope_name %></span>
+                  </div>
+                  <div>
+                    <span class="block text-xs text-slate-500 mb-0.5">Client Type</span>
+                    <span class="font-medium text-slate-700"><%= token.client_type %></span>
+                  </div>
+                  <div>
+                    <span class="block text-xs text-slate-500 mb-0.5">Usage Count</span>
+                    <span class="font-medium text-slate-700"><%= token.usage_count %> requests</span>
+                  </div>
+                  <div>
+                    <span class="block text-xs text-slate-500 mb-0.5">Last Used</span>
+                    <span class="font-medium text-slate-700"><%= token.last_used_at || 'Never' %></span>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                  <div class="text-xs text-slate-500">
+                    Created: <%= token.created_at %>
+                    <span class="mx-2">|</span>
+                    Expiry: <%= token.expires_at || 'Never' %>
+                  </div>
+                  
+                  <% if (!token.is_revoked) { %>
+                    <form action="/developer/tokens/<%= token.id %>/revoke" method="POST">
+                      <button type="submit" class="btn-secondary text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300 py-1.5 px-3" onclick="return confirm('Are you sure you want to revoke this token? This cannot be undone.')">Revoke Token</button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } %>
+      </div>
     </div>
-    <br>
+  </div>
 
-    <div>
-      <label>Expiry In Days (optional)</label><br>
-      <input type="number" name="expires_in_days" min="1" placeholder="30">
+  <!-- Usage Logs -->
+  <div class="card overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <h2 class="text-lg font-bold text-slate-900">Recent API Usage Logs</h2>
     </div>
-    <br>
-
-    <button type="submit">Create Token</button>
-  </form>
-
-  <hr>
-
-  <h2>How To Use The Token</h2>
-  <p>Use this exact HTTP header in Postman:</p>
-  <pre>Authorization: Bearer YOUR_TOKEN_HERE</pre>
-
-  <hr>
-
-  <h2>My Tokens</h2>
-  <% if (!tokens || tokens.length === 0) { %>
-    <p>No tokens created yet.</p>
-  <% } %>
-
-  <% tokens.forEach(function(token) { %>
-    <hr>
-    <p><strong>Token ID:</strong> <%= token.id %></p>
-    <p><strong>Name:</strong> <%= token.token_name %></p>
-    <p><strong>Scope:</strong> <%= token.scope_name %></p>
-    <p><strong>Client Type:</strong> <%= token.client_type %></p>
-    <p><strong>Revoked:</strong> <%= token.is_revoked ? 'Yes' : 'No' %></p>
-    <p><strong>Created:</strong> <%= token.created_at %></p>
-    <p><strong>Last Used:</strong> <%= token.last_used_at || '' %></p>
-    <p><strong>Expiry:</strong> <%= token.expires_at || 'No expiry set' %></p>
-    <p><strong>Usage Count:</strong> <%= token.usage_count %></p>
-
-    <% if (!token.is_revoked) { %>
-      <form action="/developer/tokens/<%= token.id %>/revoke" method="POST">
-        <button type="submit">Revoke Token</button>
-      </form>
+    
+    <% if (!usageLogs || usageLogs.length === 0) { %>
+      <div class="p-8 text-center text-sm text-slate-500 italic bg-white">No usage logs recorded yet.</div>
+    <% } else { %>
+      <div class="table-container max-h-[400px] overflow-y-auto">
+        <table class="table-custom min-w-max w-full">
+          <thead class="sticky top-0 bg-white shadow-sm z-10">
+            <tr>
+              <th>Timestamp</th>
+              <th>Token Name</th>
+              <th>Method</th>
+              <th>Endpoint</th>
+              <th>IP Address</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% usageLogs.forEach(function(log) { %>
+              <tr class="hover:bg-slate-50 transition-colors">
+                <td class="text-xs text-slate-500"><%= log.used_at %></td>
+                <td class="font-medium text-sm text-slate-900"><%= log.token_name %></td>
+                <td>
+                  <% if (log.http_method === 'GET') { %>
+                    <span class="text-blue-600 font-bold text-xs bg-blue-50 px-2 py-0.5 rounded">GET</span>
+                  <% } else if (log.http_method === 'POST') { %>
+                    <span class="text-green-600 font-bold text-xs bg-green-50 px-2 py-0.5 rounded">POST</span>
+                  <% } else { %>
+                    <span class="text-slate-600 font-bold text-xs bg-slate-100 px-2 py-0.5 rounded"><%= log.http_method %></span>
+                  <% } %>
+                </td>
+                <td class="font-mono text-xs text-slate-600"><%= log.endpoint %></td>
+                <td class="text-xs text-slate-500"><%= log.ip_address %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
     <% } %>
-  <% }); %>
+  </div>
+</div>
 
-  <hr>
-
-  <h2>Recent Usage Logs</h2>
-  <% if (!usageLogs || usageLogs.length === 0) { %>
-    <p>No usage logs yet.</p>
-  <% } %>
-
-  <% usageLogs.forEach(function(log) { %>
-    <hr>
-    <p><strong>Token Name:</strong> <%= log.token_name %></p>
-    <p><strong>Endpoint:</strong> <%= log.endpoint %></p>
-    <p><strong>Method:</strong> <%= log.http_method %></p>
-    <p><strong>IP Address:</strong> <%= log.ip_address %></p>
-    <p><strong>Used At:</strong> <%= log.used_at %></p>
-  <% }); %>
-  <%- include('../partials/csrf-script') %>
-</body>
-</html>
+<%- include('../partials/csrf-script') %>
+<%- include('../partials/footer') %>

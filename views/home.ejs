@@ -1,46 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Alumni Influencers</title>
-</head>
-<body>
-  <h1>Alumni Influencers</h1>
+<%- include('partials/head', { title: 'Home' }) %>
+<%- include('partials/nav') %>
+
+<div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+  <h1 class="text-4xl sm:text-5xl font-extrabold text-primary mb-6 tracking-tight">Welcome to Alumni Influencers</h1>
+  <p class="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl">Connect, bid on valuable networking opportunities, and empower your university community with data-driven insights.</p>
 
   <% if (!currentUser) { %>
-    <p><a href="/register">Register</a></p>
-    <p><a href="/login">Login</a></p>
-    <p><a href="/forgot-password">Forgot Password</a></p>
+    <div class="flex flex-col sm:flex-row gap-4">
+      <a href="/register" class="btn-primary px-8 py-3 text-lg">Get Started</a>
+      <a href="/login" class="btn-secondary px-8 py-3 text-lg">Sign In</a>
+    </div>
+  <% } else { %>
+    <div class="card p-8 w-full max-w-lg text-left">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4">Welcome back!</h2>
+      <div class="space-y-3 mb-6">
+        <p class="text-slate-600"><span class="font-medium text-slate-900">Email:</span> <%= currentUser.email %></p>
+        <p class="text-slate-600"><span class="font-medium text-slate-900">Role:</span> <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize"><%= currentUser.role %></span></p>
+      </div>
+      
+      <div class="flex justify-center">
+        <a href="/dashboard" class="btn-primary w-full">Go to Dashboard &rarr;</a>
+      </div>
+    </div>
   <% } %>
+</div>
 
-  <% if (currentUser) { %>
-    <hr>
-    <p>You are logged in as: <strong><%= currentUser.email %></strong></p>
-    <p>Role: <strong><%= currentUser.role %></strong></p>
-
-    <p><a href="/dashboard">Dashboard</a></p>
-
-    <% if (currentUser.role === 'alumnus') { %>
-      <p><a href="/profile">My Profile</a></p>
-      <p><a href="/bidding">Bidding Dashboard</a></p>
-    <% } %>
-
-    <% if (currentUser.role === 'university') { %>
-      <p><a href="/university/dashboard">University Analytics Dashboard</a></p>
-      <p><a href="/university/alumni">View Alumni Analytics</a></p>
-    <% } %>
-
-    <% if (currentUser.role === 'developer') { %>
-      <p><a href="/developer/tokens">Developer Tokens</a></p>
-      <p><a href="/winner-selection">Winner Selection Dashboard</a></p>
-      <p><a href="/api-docs">Swagger / OpenAPI Docs</a></p>
-      <p><a href="/outbox">Open Local Outbox</a></p>
-    <% } %>
-
-    <form action="/logout" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <button type="submit">Logout</button>
-    </form>
-  <% } %>
-</body>
-</html>
+<%- include('partials/footer') %>

@@ -1,26 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Local Outbox</title>
-</head>
-<body>
-  <h1>Local Outbox</h1>
+<%- include('partials/head', { title: 'Local Outbox' }) %>
+<%- include('partials/nav') %>
 
-  <p>This page simulates email sending for local testing.</p>
+<div class="py-6 w-full max-w-4xl mx-auto">
+  <div class="mb-8 flex justify-between items-end border-b border-slate-200 pb-4">
+    <div>
+      <h1 class="page-title mb-1">Local Outbox</h1>
+      <p class="text-slate-600">Simulated email delivery for local testing and debugging.</p>
+    </div>
+    <div class="hidden sm:block">
+      <a href="/" class="btn-secondary text-sm">Back to Home</a>
+    </div>
+  </div>
 
   <% if (!emails || emails.length === 0) { %>
-    <p>No outbox emails found.</p>
+    <div class="card p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-slate-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"></path></svg>
+      <h3 class="text-lg font-medium text-slate-900 mb-1">No emails found</h3>
+      <p class="text-slate-500">The outbox is currently empty.</p>
+    </div>
+  <% } else { %>
+    <div class="space-y-6">
+      <% emails.forEach(function(email) { %>
+        <div class="card overflow-hidden">
+          <div class="bg-slate-50 border-b border-slate-200 px-6 py-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-slate-900"><%= email.subject_line %></h3>
+              <span class="text-xs text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded"><%= email.created_at %></span>
+            </div>
+            <div class="text-sm">
+              <span class="text-slate-500 font-medium mr-2">To:</span>
+              <span class="text-primary font-medium"><%= email.to_email %></span>
+            </div>
+          </div>
+          <div class="p-6 bg-white">
+            <pre class="whitespace-pre-wrap font-mono text-sm text-slate-700 bg-slate-50 p-4 rounded border border-slate-100"><%= email.body_text %></pre>
+          </div>
+        </div>
+      <% }); %>
+    </div>
   <% } %>
 
-  <% emails.forEach(function(email) { %>
-    <hr>
-    <p><strong>To:</strong> <%= email.to_email %></p>
-    <p><strong>Subject:</strong> <%= email.subject_line %></p>
-    <p><strong>Created:</strong> <%= email.created_at %></p>
-    <pre><%= email.body_text %></pre>
-  <% }); %>
+  <div class="mt-8 sm:hidden">
+    <a href="/" class="btn-secondary w-full justify-center">Back to Home</a>
+  </div>
+</div>
 
-  <p><a href="/">Home</a></p>
-</body>
-</html>
+<%- include('partials/footer') %>

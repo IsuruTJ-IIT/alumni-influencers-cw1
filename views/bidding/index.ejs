@@ -1,125 +1,246 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Bidding</title>
-</head>
-<body>
-  <h1>Bidding Dashboard</h1>
+<%- include('../partials/head', { title: 'Bidding Dashboard' }) %>
+<%- include('../partials/nav') %>
 
-  <p><a href="/">Home</a></p>
-  <p><a href="/dashboard">Dashboard</a></p>
-  <p><a href="/profile">My Profile</a></p>
+<div class="py-6">
+  <div class="mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="page-title mb-1">Bidding Dashboard</h1>
+      <p class="text-slate-600">Place bids to become the featured alumnus of the day.</p>
+    </div>
+  </div>
 
   <% if (success) { %>
-    <p style="color:green;"><%= success %></p>
+    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6" role="alert">
+      <p class="text-sm text-green-700"><%= success %></p>
+    </div>
   <% } %>
 
   <% if (error) { %>
-    <p style="color:red;"><%= error %></p>
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6" role="alert">
+      <p class="text-sm text-red-700"><%= error %></p>
+    </div>
   <% } %>
 
-  <hr>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Current Status & Slots -->
+    <div class="space-y-6">
+      
+      <!-- Slot Information -->
+      <div class="card p-6 border-l-4 border-primary">
+        <h2 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">Slot Information</h2>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Today's Date:</span>
+            <span class="font-medium text-slate-900"><%= todayDate %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Tomorrow's Slot:</span>
+            <span class="font-medium text-slate-900"><%= tomorrowDate %></span>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-slate-100">
+            <span class="text-slate-500">Bidding Status:</span>
+            <% if (biddingOpen) { %>
+              <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">OPEN NOW</span>
+            <% } else { %>
+              <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">CLOSED</span>
+            <% } %>
+          </div>
+          <% if (!biddingOpen) { %>
+            <p class="text-xs text-slate-400 text-right mt-1">Cutoff is 11:45 PM.</p>
+          <% } %>
+        </div>
+      </div>
 
-  <h2>Slot Information</h2>
-  <p><strong>Today:</strong> <%= todayDate %></p>
-  <p><strong>Tomorrow Slot:</strong> <%= tomorrowDate %></p>
-  <p><strong>Bidding Open Right Now:</strong> <%= biddingOpen ? 'Yes' : 'No (cutoff is 6 PM)' %></p>
+      <!-- Featured & Selected Winners -->
+      <div class="card p-6">
+        <h2 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">Featured Alumni</h2>
+        
+        <div class="mb-4">
+          <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Today</h3>
+          <% if (todayFeatured && todayFeatured.full_name && todayFeatured.activated_at) { %>
+            <div class="bg-blue-50 p-3 rounded-md border border-blue-100">
+              <p class="font-bold text-primary text-sm"><%= todayFeatured.full_name %></p>
+              <p class="text-xs text-slate-500 mt-1">Activated: <%= todayFeatured.activated_at %></p>
+            </div>
+          <% } else { %>
+            <p class="text-sm text-slate-500 italic">No featured alumnus for today.</p>
+          <% } %>
+        </div>
 
-  <hr>
+        <div>
+          <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Tomorrow's Winner</h3>
+          <% if (tomorrowSelected && tomorrowSelected.full_name) { %>
+            <div class="bg-indigo-50 p-3 rounded-md border border-indigo-100">
+              <p class="font-bold text-indigo-700 text-sm"><%= tomorrowSelected.full_name %></p>
+              <p class="text-xs text-slate-500 mt-1">Selected: <%= tomorrowSelected.selected_at %></p>
+            </div>
+          <% } else { %>
+            <p class="text-sm text-slate-500 italic">No winner selected for tomorrow yet.</p>
+          <% } %>
+        </div>
+      </div>
 
-  <h2>Today Featured Alumnus</h2>
-  <% if (todayFeatured && todayFeatured.full_name && todayFeatured.activated_at) { %>
-    <p><strong><%= todayFeatured.full_name %></strong></p>
-    <p>Activated at: <%= todayFeatured.activated_at %></p>
-  <% } else { %>
-    <p>No featured alumnus activated for today yet.</p>
-  <% } %>
+      <!-- Monthly Allowance -->
+      <div class="card p-6">
+        <h2 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">Monthly Appearance Status</h2>
+        <div class="space-y-3 text-sm mb-4">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Wins This Month:</span>
+            <span class="font-medium text-slate-900"><%= monthlyStatus.wins %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Allowed This Month:</span>
+            <span class="font-medium text-slate-900"><%= monthlyStatus.allowedWins %></span>
+          </div>
+          <div class="flex justify-between pt-2 border-t border-slate-100">
+            <span class="font-bold text-slate-900">Remaining Wins:</span>
+            <span class="font-bold text-primary"><%= monthlyStatus.remaining %></span>
+          </div>
+        </div>
 
-  <hr>
+        <div class="bg-slate-50 p-3 rounded-md border border-slate-200">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-sm text-slate-700">Event Bonus Active:</span>
+            <% if (monthlyStatus.hasBonus) { %>
+              <span class="text-xs font-bold text-green-600">YES</span>
+            <% } else { %>
+              <span class="text-xs font-bold text-slate-400">NO</span>
+            <% } %>
+          </div>
+          <% if (!monthlyStatus.hasBonus) { %>
+            <p class="text-xs text-slate-500">No event bonus recorded this month.</p>
+          <% } %>
+        </div>
+      </div>
 
-  <h2>Tomorrow Selected Winner</h2>
-  <% if (tomorrowSelected && tomorrowSelected.full_name) { %>
-    <p><strong><%= tomorrowSelected.full_name %></strong></p>
-    <p>Selected at: <%= tomorrowSelected.selected_at %></p>
-  <% } else { %>
-    <p>No winner selected for tomorrow yet.</p>
-  <% } %>
+    </div>
 
-  <hr>
+    <!-- Right Column: Bidding Action & History -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- Bidding Action Card -->
+      <div class="card p-6 shadow-md border-t-4 border-t-primary">
+        <h2 class="text-xl font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">Your Bid for Tomorrow</h2>
 
-  <h2>Monthly Appearance Status</h2>
-  <p><strong>Wins This Month:</strong> <%= monthlyStatus.wins %></p>
-  <p><strong>Allowed This Month:</strong> <%= monthlyStatus.allowedWins %></p>
-  <p><strong>Remaining:</strong> <%= monthlyStatus.remaining %></p>
-  <p><strong>Event Bonus Active:</strong> <%= monthlyStatus.hasBonus ? 'Yes' : 'No' %></p>
+        <% if (currentBid) { %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+              <span class="block text-sm text-blue-600 font-medium mb-1">Current Bid Amount</span>
+              <span class="text-3xl font-extrabold text-blue-900">$<%= currentBid.bid_amount %></span>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <span class="block text-sm text-slate-500 font-medium mb-1">Blind Status</span>
+              <span class="text-lg font-bold text-slate-700"><%= blindStatus %></span>
+            </div>
+          </div>
 
-  <% if (!monthlyStatus.hasBonus) { %>
-    <p>
-      No event bonus has been recorded for you this month.
-      Event bonuses are recorded by the developer during local testing.
-    </p>
-  <% } %>
+          <% if (biddingOpen) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-white p-4 border border-slate-200 rounded-lg">
+                <h3 class="text-sm font-semibold text-slate-900 mb-3">Increase Bid</h3>
+                <form action="/bidding/<%= currentBid.id %>/increase" method="POST" class="flex flex-col sm:flex-row gap-2">
+                  <div class="relative flex-grow">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-slate-500 sm:text-sm">$</span>
+                    </div>
+                    <input type="number" name="new_bid_amount" step="0.01" min="0.01" required class="input-field pl-7 w-full" placeholder="New amount">
+                  </div>
+                  <button type="submit" class="btn-primary whitespace-nowrap">Update</button>
+                </form>
+              </div>
 
-  <hr>
+              <div class="bg-white p-4 border border-red-100 rounded-lg flex flex-col justify-center">
+                <h3 class="text-sm font-semibold text-red-800 mb-3">Cancel Bid</h3>
+                <form action="/bidding/<%= currentBid.id %>/cancel" method="POST">
+                  <button type="submit" class="btn-danger w-full">Withdraw Bid</button>
+                </form>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+              <p class="text-sm text-yellow-700 font-medium">Bidding is closed. You can no longer change your bid for tomorrow's slot.</p>
+            </div>
+          <% } %>
 
-  <h2>Tomorrow Bid</h2>
+        <% } else { %>
+          <% if (biddingOpen && monthlyStatus.remaining > 0) { %>
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200 mb-4">
+              <form action="/bidding" method="POST" class="max-w-sm">
+                <label for="bid_amount" class="block text-sm font-medium text-slate-700 mb-1">Enter Bid Amount</label>
+                <div class="flex gap-2">
+                  <div class="relative flex-grow">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-slate-500 sm:text-sm">$</span>
+                    </div>
+                    <input id="bid_amount" type="number" name="bid_amount" step="0.01" min="0.01" required class="input-field pl-7" placeholder="0.00">
+                  </div>
+                  <button type="submit" class="btn-primary whitespace-nowrap">Place Bid</button>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">Highest bid secures the featured slot.</p>
+              </form>
+            </div>
+          <% } else if (!biddingOpen) { %>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+              <p class="text-sm text-yellow-700 font-medium">Bidding is closed for today. Check back tomorrow.</p>
+            </div>
+          <% } else { %>
+            <div class="bg-red-50 border-l-4 border-red-400 p-4">
+              <p class="text-sm text-red-700 font-medium">You have reached your monthly appearance limit and cannot place further bids.</p>
+            </div>
+          <% } %>
+        <% } %>
+      </div>
 
-  <% if (currentBid) { %>
-    <p><strong>Your Current Bid Amount:</strong> <%= currentBid.bid_amount %></p>
-    <p><strong>Your Blind Status:</strong> <%= blindStatus %></p>
+      <!-- Bid History -->
+      <div class="card overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100">
+          <h2 class="text-lg font-bold text-slate-900">Bid History</h2>
+        </div>
+        
+        <% if (bidHistory.length === 0) { %>
+          <div class="p-6 text-center text-sm text-slate-500 italic">No previous bids found.</div>
+        <% } else { %>
+          <div class="table-container">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Slot Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Updated</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <% bidHistory.forEach(function(item) { %>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="font-medium"><%= item.slot_date_text %></td>
+                    <td>$<%= item.bid_amount %></td>
+                    <td>
+                      <% if (item.status === 'WON') { %>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">WON</span>
+                      <% } else if (item.status === 'CANCELLED') { %>
+                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">CANCELLED</span>
+                      <% } else { %>
+                        <span class="px-2 py-1 bg-slate-100 text-slate-800 text-xs font-bold rounded-full"><%= item.status %></span>
+                      <% } %>
+                    </td>
+                    <td class="text-xs text-slate-500"><%= item.updated_at_text %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
 
-    <% if (biddingOpen) { %>
-      <h3>Increase Bid</h3>
-      <form action="/bidding/<%= currentBid.id %>/increase" method="POST">
-        <input type="number" name="new_bid_amount" step="0.01" min="0.01" required>
-        <button type="submit">Increase Bid</button>
-      </form>
+      <p class="text-xs text-slate-400 text-center mt-4">
+        Winner selection is handled automatically by the scheduler.
+      </p>
 
-      <h3>Cancel Bid</h3>
-      <form action="/bidding/<%= currentBid.id %>/cancel" method="POST">
-        <button type="submit">Cancel Bid</button>
-      </form>
-    <% } else { %>
-      <p>Bidding is closed. You can no longer change today’s bid.</p>
-    <% } %>
+    </div>
+  </div>
+</div>
 
-  <% } else { %>
-    <% if (biddingOpen && monthlyStatus.remaining > 0) { %>
-      <form action="/bidding" method="POST">
-        <label>Bid Amount</label><br>
-        <input type="number" name="bid_amount" step="0.01" min="0.01" required><br><br>
-        <button type="submit">Place Bid For Tomorrow</button>
-      </form>
-    <% } else if (!biddingOpen) { %>
-      <p>Bidding is closed for today. Cutoff is 6 PM.</p>
-    <% } else { %>
-      <p>You have reached your monthly appearance limit.</p>
-    <% } %>
-  <% } %>
-
-  <hr>
-
-  <h2>Bid History</h2>
-  <% if (bidHistory.length === 0) { %>
-    <p>No bids yet.</p>
-  <% } %>
-
-  <% bidHistory.forEach(function(item) { %>
-    <hr>
-    <p><strong>Slot Date:</strong> <%= item.slot_date_text %></p>
-    <p><strong>Amount:</strong> <%= item.bid_amount %></p>
-    <p><strong>Status:</strong> <%= item.status %></p>
-    <p><strong>Created:</strong> <%= item.created_at_text %></p>
-    <p><strong>Updated:</strong> <%= item.updated_at_text %></p>
-  <% }); %>
-
-  <hr>
-
-  <p>
-    Winner selection is handled automatically by the scheduler.
-    Local demo controls are only available to the developer account.
-  </p>
-  <%- include('../partials/csrf-script') %>
-</body>
-</html>
+<%- include('../partials/csrf-script') %>
+<%- include('../partials/footer') %>

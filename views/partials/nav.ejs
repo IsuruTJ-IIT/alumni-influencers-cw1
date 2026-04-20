@@ -1,0 +1,50 @@
+<nav class="bg-primary text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex">
+        <div class="flex-shrink-0 flex items-center">
+          <a href="/" class="text-xl font-bold tracking-tight">Alumni Influencers</a>
+        </div>
+        
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <div class="hidden sm:ml-6 sm:flex sm:space-x-4 sm:items-center">
+            <a href="/dashboard" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Dashboard</a>
+            
+            <% if (currentUser.role === 'alumnus') { %>
+              <a href="/profile" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">My Profile</a>
+              <a href="/bidding" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Bidding</a>
+            <% } else if (currentUser.role === 'university') { %>
+              <a href="/university/dashboard" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Analytics</a>
+              <a href="/university/alumni" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Alumni List</a>
+            <% } else if (currentUser.role === 'developer') { %>
+              <a href="/developer/tokens" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Tokens</a>
+              <a href="/winner-selection" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Winners</a>
+              <a href="/api-docs" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Docs</a>
+              <a href="/outbox" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Outbox</a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="hidden sm:flex sm:items-center sm:space-x-4">
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <span class="text-sm text-slate-200">
+            <%= currentUser.email %> (<span class="capitalize"><%= currentUser.role %></span>)
+          </span>
+          <form action="/logout" method="POST" class="inline m-0">
+            <% if (typeof csrfToken !== 'undefined') { %>
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <% } %>
+            <button type="submit" class="bg-primary-hover px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Logout</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition-colors">Login</a>
+          <a href="/register" class="bg-white text-primary px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100 transition-colors">Register</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main content container starts here, matched with flex-grow from head -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

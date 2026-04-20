@@ -2,6 +2,7 @@
 
 const bcrypt = require("bcrypt");
 const authDao = require("../dao/authDao");
+const profileDao = require("../dao/profileDao");
 const {
   normalizeEmail,
   isUniversityEmail,
@@ -317,7 +318,11 @@ async function resetPassword(req, res) {
 }
 
 async function showDashboard(req, res) {
-  res.render("auth/dashboard");
+  let profile = null;
+  if (req.session.user && req.session.user.role === 'alumnus') {
+    profile = await profileDao.getProfileByUserId(req.session.user.id);
+  }
+  res.render("auth/dashboard", { profile });
 }
 
 async function showOutbox(req, res) {

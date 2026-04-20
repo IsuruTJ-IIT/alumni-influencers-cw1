@@ -1,68 +1,79 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>View Alumni</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <div class="page-shell">
-    <aside class="sidebar">
-      <h2>University Analytics</h2>
-      <p>Signed in as:<br><strong><%= currentUser.fullName %></strong></p>
-      <a href="/dashboard">Main Dashboard</a>
-      <a href="/university/dashboard">Charts Dashboard</a>
-      <a href="/university/alumni">View Alumni</a>
-      <form action="/logout" method="POST">
-        <button type="submit">Logout</button>
-      </form>
-    </aside>
+<%- include('../partials/head', { title: 'View Alumni' }) %>
+<%- include('../partials/nav') %>
 
-    <main class="main-content">
-      <h1>View Alumni</h1>
-      <p>This page displays alumni filtered by programme, graduation year, and industry sector.</p>
-
-      <div id="loadingBox" class="loading" style="display:none;">Loading data from API...</div>
-      <div id="errorBox" class="error" style="display:none;"></div>
-
-      <section class="card">
-        <h2>API Token and Filters</h2>
-        <input id="apiTokenInput" type="text" placeholder="Paste analytics dashboard bearer token" style="width:100%;" />
-        <br /><br />
-        <div class="filters">
-          <div><label>Programme</label><br /><select id="programmeFilter"></select></div>
-          <div><label>Graduation Year</label><br /><select id="graduationYearFilter"></select></div>
-          <div><label>Industry Sector</label><br /><select id="industrySectorFilter"></select></div>
-          <div><label>Action</label><br /><button id="loadDashboardButton" class="primary" type="button">Load Alumni</button></div>
-        </div>
-        <br />
-        <button id="exportCsvButton" class="secondary" type="button">Export Alumni CSV</button>
-      </section>
-
-      <section class="card">
-        <h2>Alumni Results</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Programme</th>
-                <th>Graduation Year</th>
-                <th>Industry</th>
-                <th>Job Titles</th>
-                <th>Employers</th>
-                <th>Location</th>
-              </tr>
-            </thead>
-            <tbody id="alumniTableBody"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+<div class="py-6">
+  <div class="mb-8">
+    <h1 class="page-title mb-1">Alumni Database</h1>
+    <p class="text-slate-600">Browse and filter your alumni network to identify potential influencers and track career progression.</p>
   </div>
 
-  <%- include('../partials/csrf-script') %>
-  <script src="/js/university-dashboard.js"></script>
-</body>
-</html>
+  <div id="loadingBox" class="hidden bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-md mb-6 flex items-center">
+    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+    Loading data from API...
+  </div>
+  
+  <div id="errorBox" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6"></div>
+
+  <div class="card p-6 mb-6 shadow-sm">
+    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">API Token and Filters</h2>
+    
+    <div class="mb-6">
+      <input id="apiTokenInput" type="text" placeholder="Paste analytics dashboard bearer token" class="input-field text-sm font-mono" />
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Programme</label>
+        <select id="programmeFilter" class="input-field text-sm"></select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Graduation Year</label>
+        <select id="graduationYearFilter" class="input-field text-sm"></select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Industry Sector</label>
+        <select id="industrySectorFilter" class="input-field text-sm"></select>
+      </div>
+      <div class="flex items-end space-x-2">
+        <button id="loadDashboardButton" class="btn-primary flex-1 h-[38px]" type="button">Load Alumni</button>
+      </div>
+    </div>
+    
+    <div class="pt-3 border-t border-slate-100 flex justify-end">
+      <button id="exportCsvButton" class="btn-secondary text-xs py-1.5" type="button">
+        <svg class="w-4 h-4 mr-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        Export Alumni CSV
+      </button>
+    </div>
+  </div>
+
+  <div class="card overflow-hidden shadow-sm border border-slate-200">
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+      <h2 class="text-lg font-bold text-slate-900">Alumni Results</h2>
+    </div>
+    <div class="table-container min-h-[400px]">
+      <table class="table-custom min-w-max w-full">
+        <thead class="bg-slate-50 border-b border-slate-200">
+          <tr>
+            <th>Name</th>
+            <th>Programme</th>
+            <th>Grad. Year</th>
+            <th>Industry</th>
+            <th>Job Titles</th>
+            <th>Employers</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody id="alumniTableBody" class="divide-y divide-slate-200">
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-sm text-slate-500 italic bg-white">No data loaded. Apply filters and click "Load Alumni".</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/csrf-script') %>
+<script src="/js/university-dashboard.js"></script>
+<%- include('../partials/footer') %>
